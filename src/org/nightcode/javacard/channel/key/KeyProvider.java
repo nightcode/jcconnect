@@ -35,24 +35,20 @@ public interface KeyProvider {
       // do nothing
     }
 
-    @Override public Key getKey(byte keyIdentifier, byte keyVersionNumber) {
-      return BASE_KEY;
-    }
-
-    @Override public Key deriveSessionKey(Key baseKey, byte[] sequenceCounter, KeyUsage usage, DerivationType type) {
-      if (DerivationType.SCP_02.equals(type)) {
-        return deriveScp02SessionKey(baseKey, usage.keyConstant(), sequenceCounter);
+    @Override public Key deriveSessionKey(KeyContext context, byte keyIdentifier, KeyUsage usage) {
+      if (DerivationType.SCP_02.equals(context.derivationType())) {
+        return deriveScp02SessionKey(usage.keyConstant(), context.sequenceCounter());
       }
-      throw new IllegalArgumentException("unsupported derivation type " + type);
+      throw new IllegalArgumentException("unsupported derivation type " + context.derivationType());
     }
 
-    private Key deriveScp02SessionKey(Key baseKey, byte[] deriveKeyConstant, byte[] sequenceCounter) {
+    private Key deriveScp02SessionKey(byte[] deriveKeyConstant, byte[] sequenceCounter) {
       byte[] derivationData = new byte[16];
       System.arraycopy(deriveKeyConstant, 0, derivationData, 0, 2);
       System.arraycopy(sequenceCounter, 0, derivationData, 2, 2);
       try {
         Cipher cipher = Cipher.getInstance(JcCryptoUtils.DES_EDE_CBC_NO_PADDING);
-        cipher.init(Cipher.ENCRYPT_MODE, baseKey, JcCryptoUtils.ZERO_IV_PARAMETER_SPEC);
+        cipher.init(Cipher.ENCRYPT_MODE, BASE_KEY, JcCryptoUtils.ZERO_IV_PARAMETER_SPEC);
         byte[] result = cipher.doFinal(derivationData);
         return new SecretKeySpec(JcCryptoUtils.toKey24(result), "DESede");
       } catch (GeneralSecurityException ex) {
@@ -63,7 +59,5 @@ public interface KeyProvider {
 
   KeyProvider DEFAULT = new DefaultKeyProvider();
 
-  Key getKey(byte keyIdentifier, byte keyVersionNumber);
-
-  Key deriveSessionKey(Key baseKey, byte[] sequenceCounter, KeyUsage usage, DerivationType type);
+  Key deriveSessionKey(KeyContext context, byte keyIdentifier, KeyUsage usage);
 }

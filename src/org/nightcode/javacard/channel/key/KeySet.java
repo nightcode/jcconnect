@@ -15,26 +15,17 @@
 package org.nightcode.javacard.channel.key;
 
 import org.nightcode.javacard.JavaCardException;
-import org.nightcode.javacard.channel.CardChannelContext;
-import org.nightcode.javacard.channel.scp.Scp02ParameterI;
 import org.nightcode.javacard.channel.scp.ScpVersion;
 import org.nightcode.javacard.common.CardProperties;
 
 public abstract class KeySet {
 
-  public static KeySet of(CardChannelContext context) throws JavaCardException {
-    if (ScpVersion.SCP_02.equals(context.getScpVersion())) {
-      Scp02ParameterI i = Scp02ParameterI.of(context.getCardRecognitionData());
-      return new Scp02KeySet(i.threeSecureChannelKeys(),  context.getCardProperties(), context.keyProvider());
+  public static KeySet of(ScpVersion scpVersion, KeyProvider keyProvider) throws JavaCardException {
+    if (ScpVersion.SCP_02.equals(scpVersion)) {
+      return new Scp02KeySet(keyProvider);
     }
-    throw new JavaCardException("can't create KeySet, unsupported SCP %s", context.getScpVersion());
+    throw new JavaCardException("can't create KeySet, unsupported SCP %s", scpVersion);
   }
 
-  final CardProperties cardProperties;
-
-  KeySet(CardProperties cardProperties) {
-    this.cardProperties = cardProperties;
-  }
-
-  public abstract SessionKeys deriveSessionKeys(byte[] sequenceCounter);
+  public abstract SessionKeys deriveSessionKeys(CardProperties cardProperties, byte[] sequenceCounter);
 }

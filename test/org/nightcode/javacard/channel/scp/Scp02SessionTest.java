@@ -62,8 +62,8 @@ public class Scp02SessionTest extends AbstractJcTest {
     CardChannelContext context = createContext(channel);
 
     byte[] sequenceCounter =  Hexs.hex().toByteArray("0002");
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
     context.setSessionKeys(sessionKeys);
     
     Scp02Context scp02Context = new Scp02Context(
@@ -85,8 +85,8 @@ public class Scp02SessionTest extends AbstractJcTest {
     CardChannelContext context = createContext(channel);
 
     byte[] sequenceCounter =  Hexs.hex().toByteArray("0005");
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
     context.setSessionKeys(sessionKeys);
 
     Scp02Context scp02Context = new Scp02Context(

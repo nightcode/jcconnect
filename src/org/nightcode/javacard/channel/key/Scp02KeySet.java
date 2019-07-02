@@ -22,53 +22,27 @@ import java.util.Map;
 
 public class Scp02KeySet extends KeySet {
 
-  private static final DerivationType DERIVATION_TYPE = DerivationType.SCP_02;
-
-  private final boolean threeKeys;
   private final KeyProvider keyProvider;
 
-  Scp02KeySet(boolean threeKeys, CardProperties cardProperties, KeyProvider keyProvider) {
-    super(cardProperties);
-    this.threeKeys = threeKeys;
+  Scp02KeySet(KeyProvider keyProvider) {
     this.keyProvider = keyProvider;
   }
 
-  @Override public SessionKeys deriveSessionKeys(byte[] sequenceCounter) {
-    if (threeKeys) {
-      return threeKeysMode(sequenceCounter);
-    } else {
-      return singleKeyMode(sequenceCounter);
-    }
-  }
-
-  private SessionKeys singleKeyMode(byte[] sequenceCounter) {
-    byte keyIdentifier = cardProperties.getBaseKeyIdentifier();
-    Key baseKey = keyProvider.getKey(keyIdentifier, cardProperties.getKeyVersionNumber());
+  @Override public SessionKeys deriveSessionKeys(CardProperties cardProperties, byte[] sequenceCounter) {
+    KeyContext context = KeyContext.builder()
+        .derivationType(DerivationType.SCP_02)
+        .cardProperties(cardProperties)
+        .sequenceCounter(sequenceCounter)
+        .build();
 
     Map<KeyUsage, Key> keys = new HashMap<>();
-    keys.put(KeyUsage.ENC, keyProvider.deriveSessionKey(baseKey, sequenceCounter, KeyUsage.ENC, DERIVATION_TYPE));
-    keys.put(KeyUsage.MAC, keyProvider.deriveSessionKey(baseKey, sequenceCounter, KeyUsage.MAC, DERIVATION_TYPE));
-    keys.put(KeyUsage.DEK, keyProvider.deriveSessionKey(baseKey, sequenceCounter, KeyUsage.DEK, DERIVATION_TYPE));
-    keys.put(KeyUsage.R_MAC, keyProvider.deriveSessionKey(baseKey, sequenceCounter, KeyUsage.R_MAC, DERIVATION_TYPE));
 
-    return new SessionKeysImpl(keys);
-  }
+    CardProperties properties = context.cardProperties();
 
-  private SessionKeys threeKeysMode(byte[] sequenceCounter) {
-    Map<KeyUsage, Key> keys = new HashMap<>();
-    byte keyVersion = cardProperties.getKeyVersionNumber();
-
-    Key key = keyProvider.getKey(cardProperties.getEncKeyIdentifier(), keyVersion);
-    keys.put(KeyUsage.ENC, keyProvider.deriveSessionKey(key, sequenceCounter, KeyUsage.ENC, DERIVATION_TYPE));
-
-    key = keyProvider.getKey(cardProperties.getMacKeyIdentifier(), keyVersion);
-    keys.put(KeyUsage.MAC, keyProvider.deriveSessionKey(key, sequenceCounter, KeyUsage.MAC, DERIVATION_TYPE));
-
-    key = keyProvider.getKey(cardProperties.getDekKeyIdentifier(), keyVersion);
-    keys.put(KeyUsage.DEK, keyProvider.deriveSessionKey(key, sequenceCounter, KeyUsage.DEK, DERIVATION_TYPE));
-
-    key = keyProvider.getKey(cardProperties.getDekKeyIdentifier(), keyVersion);
-    keys.put(KeyUsage.R_MAC, keyProvider.deriveSessionKey(key, sequenceCounter, KeyUsage.R_MAC, DERIVATION_TYPE));
+    keys.put(KeyUsage.ENC, keyProvider.deriveSessionKey(context, properties.getEncKeyIdentifier(), KeyUsage.ENC));
+    keys.put(KeyUsage.MAC, keyProvider.deriveSessionKey(context, properties.getMacKeyIdentifier(), KeyUsage.MAC));
+    keys.put(KeyUsage.DEK, keyProvider.deriveSessionKey(context, properties.getDekKeyIdentifier(), KeyUsage.DEK));
+    keys.put(KeyUsage.R_MAC, keyProvider.deriveSessionKey(context, properties.getMacKeyIdentifier(), KeyUsage.R_MAC));
 
     return new SessionKeysImpl(keys);
   }

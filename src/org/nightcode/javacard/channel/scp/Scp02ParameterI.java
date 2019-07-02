@@ -19,11 +19,11 @@ import org.nightcode.tools.ber.BerFrame;
 
 import javax.annotation.Nullable;
 
-public final class Scp02ParameterI {
+final class Scp02ParameterI {
 
   private static final Scp02ParameterI DEFAULT = Scp02ParameterI.parse((byte) 0x15);
 
-  public static Scp02ParameterI of(@Nullable BerFrame cardRecognitionData) {
+  static Scp02ParameterI of(@Nullable BerFrame cardRecognitionData) {
     if (cardRecognitionData == null) {
       return DEFAULT;
     }
@@ -36,7 +36,7 @@ public final class Scp02ParameterI {
     return Scp02ParameterI.parse(i);
   }
 
-  public static Scp02ParameterI parse(byte i) {
+  private static Scp02ParameterI parse(byte i) {
     return new Scp02ParameterI(i);
   }
 

@@ -49,7 +49,6 @@ public class Scp02Session implements SecureChannelSession {
   private static final Hexs HEX = Hexs.hex();
 
   private final CardChannelContext context;
-  private final Scp02ParameterI i;
   private final ByteArrayGenerator byteArrayGenerator;
 
   private volatile Scp02ApduChannel channel;
@@ -63,7 +62,6 @@ public class Scp02Session implements SecureChannelSession {
   Scp02Session(CardChannelContext context, ByteArrayGenerator byteArrayGenerator) {
     this.context = context;
     this.byteArrayGenerator = byteArrayGenerator;
-    this.i = Scp02ParameterI.of(context.getCardRecognitionData());
 
     try {
       desEdeCipher = Cipher.getInstance(JcCryptoUtils.DES_EDE_ECB_NO_PADDING);
@@ -85,7 +83,7 @@ public class Scp02Session implements SecureChannelSession {
     Scp02Context scp02Context = initializeUpdate(hostKeyVersionNumber);
     byte[] icv = externalAuthenticate(scp02Context, securityLevel);
 
-    channel = new Scp02ApduChannel(context, i, securityLevel, icv);
+    channel = new Scp02ApduChannel(context, securityLevel, icv);
     channel.setRicv(icv);
   }
 
@@ -151,8 +149,8 @@ public class Scp02Session implements SecureChannelSession {
       throw new JavaCardException("key version mismatch: %s != %s", keyVersionNumber, cardKeyVersionNumber);
     }
 
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
     context.setSessionKeys(sessionKeys);
 
     Key encKey = sessionKeys.getDesEde(KeyUsage.ENC);
@@ -183,7 +181,7 @@ public class Scp02Session implements SecureChannelSession {
       p1 |= SecurityLevel.C_MAC.bitMask();
     }
 
-    Scp02ApduChannel initialSecuredChannel = new Scp02ApduChannel(context, i, EnumSet.of(SecurityLevel.C_MAC));
+    Scp02ApduChannel initialSecuredChannel = new Scp02ApduChannel(context, EnumSet.of(SecurityLevel.C_MAC));
 
     Key encKey = context.getSessionKeys().getDesEde(KeyUsage.ENC);
     byte[] hostCryptogram;

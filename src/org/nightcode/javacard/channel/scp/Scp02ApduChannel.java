@@ -56,30 +56,25 @@ final class Scp02ApduChannel implements ApduChannel {
   private final Cipher desCipher;
   private final Cipher desCbcCipher;
 
-  Scp02ApduChannel(CardChannelContext context, Scp02ParameterI i, EnumSet<SecurityLevel> securityLevel) {
-    this(context.channel(), context.getMaxLength(), i, securityLevel, context.getSessionKeys(), null);
+  Scp02ApduChannel(CardChannelContext context, EnumSet<SecurityLevel> securityLevel) {
+    this(context, securityLevel, null);
   }
 
-  Scp02ApduChannel(CardChannelContext context, Scp02ParameterI i, EnumSet<SecurityLevel> securityLevel, byte[] icv) {
-    this(context.channel(), context.getMaxLength(), i, securityLevel, context.getSessionKeys(), icv);
-  }
-
-  Scp02ApduChannel(ApduChannel channel, int maxLength, Scp02ParameterI i, EnumSet<SecurityLevel> securityLevel,
-      SessionKeys sessionKeys, byte[] icv) {
-    this.channel = channel;
-    this.i = i;
+  Scp02ApduChannel(CardChannelContext context, EnumSet<SecurityLevel> securityLevel, byte[] icv) {
+    this.channel = context.channel();
+    this.i = Scp02ParameterI.of(context.getCardRecognitionData());
+    this.sessionKeys = context.getSessionKeys();
     this.securityLevel = securityLevel;
-    this.sessionKeys = sessionKeys;
     this.icv = icv;
 
-    int length = maxLength;
+    int maxLength = context.getMaxLength();
     if (securityLevel.contains(SecurityLevel.C_MAC)) {
-      length -= CMAC_LENGTH;
+      maxLength -= CMAC_LENGTH;
       if (securityLevel.contains(SecurityLevel.C_DECRYPTION)) {
-        length -= ENC_LENGTH;
+        maxLength -= ENC_LENGTH;
       }
     }
-    this.maxDataLength = length;
+    this.maxDataLength = maxLength;
 
     try {
       desCipher = Cipher.getInstance(JcCryptoUtils.DES_ECB_NO_PADDING);
@@ -185,8 +180,6 @@ final class Scp02ApduChannel implements ApduChannel {
       buffer[0] |= 0x04;
       buffer[4] += CMAC_LENGTH;
     }
-
-
 
     if (icv == null) {
       icv = new byte[8];

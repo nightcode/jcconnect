@@ -29,10 +29,6 @@ public class CardProperties {
     return Aid.parse(properties.getStringValue("aid"));
   }
 
-  public byte getBaseKeyIdentifier() {
-    return properties.getByteValue("base_key_identifier");
-  }
-
   public byte getDekKeyIdentifier() {
     return properties.getByteValue("dek_key_identifier");
   }

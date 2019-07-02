@@ -38,14 +38,14 @@ public class Scp02ApduChannelTest extends AbstractJcTest {
     };
 
     CardChannelContext context = createContext(channel);
-    Scp02ParameterI i = Scp02ParameterI.of(context.getCardRecognitionData());
 
     byte[] sequenceCounter =  HEX.toByteArray("0004");
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
+    context.setSessionKeys(sessionKeys);
 
-    ApduChannel scpChannel = new Scp02ApduChannel(channel, context.getMaxLength(), i, EnumSet.of(SecurityLevel.C_MAC)
-        , sessionKeys, HEX.toByteArray("FB3A120021F7363C"));
+    ApduChannel scpChannel
+        = new Scp02ApduChannel(context, EnumSet.of(SecurityLevel.C_MAC), HEX.toByteArray("FB3A120021F7363C"));
     scpChannel.transmit(new CommandAPDU(HEX.toByteArray("80F28002024F00")));
   }
 
@@ -56,14 +56,14 @@ public class Scp02ApduChannelTest extends AbstractJcTest {
     };
 
     CardChannelContext context = createContext(channel);
-    Scp02ParameterI i = Scp02ParameterI.of(context.getCardRecognitionData());
 
     byte[] sequenceCounter =  HEX.toByteArray("0005");
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
+    context.setSessionKeys(sessionKeys);
 
-    ApduChannel scpChannel = new Scp02ApduChannel(channel, context.getMaxLength(), i
-        , EnumSet.of(SecurityLevel.C_MAC, SecurityLevel.C_DECRYPTION), sessionKeys, HEX.toByteArray("AD88229B0C0773C3"));
+    ApduChannel scpChannel = new Scp02ApduChannel(context, EnumSet.of(SecurityLevel.C_MAC, SecurityLevel.C_DECRYPTION)
+        , HEX.toByteArray("AD88229B0C0773C3"));
     scpChannel.transmit(new CommandAPDU(HEX.toByteArray("80F28002024F00")));
   }
 
@@ -74,14 +74,14 @@ public class Scp02ApduChannelTest extends AbstractJcTest {
     };
 
     CardChannelContext context = createContext(channel);
-    Scp02ParameterI i = Scp02ParameterI.of(context.getCardRecognitionData());
 
     byte[] sequenceCounter =  HEX.toByteArray("002B");
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
+    context.setSessionKeys(sessionKeys);
 
-    ApduChannel scpChannel = new Scp02ApduChannel(channel, context.getMaxLength(), i, EnumSet.of(SecurityLevel.C_MAC)
-        , sessionKeys, HEX.toByteArray("1FFFFA8673AC4B36"));
+    ApduChannel scpChannel
+        = new Scp02ApduChannel(context, EnumSet.of(SecurityLevel.C_MAC), HEX.toByteArray("1FFFFA8673AC4B36"));
     scpChannel.transmit(new CommandAPDU(HEX.toByteArray("80DD0000")));
   }
 
@@ -92,15 +92,14 @@ public class Scp02ApduChannelTest extends AbstractJcTest {
     };
 
     CardChannelContext context = createContext(channel);
-    Scp02ParameterI i = Scp02ParameterI.of(context.getCardRecognitionData());
 
     byte[] sequenceCounter =  HEX.toByteArray("0064");
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
+    context.setSessionKeys(sessionKeys);
 
-    Scp02ApduChannel scpChannel = new Scp02ApduChannel(channel, context.getMaxLength(), i
-        , EnumSet.of(SecurityLevel.C_MAC, SecurityLevel.R_MAC)
-        , sessionKeys, HEX.toByteArray("D548435F7981B2B4"));
+    Scp02ApduChannel scpChannel = new Scp02ApduChannel(context, EnumSet.of(SecurityLevel.C_MAC, SecurityLevel.R_MAC)
+        , HEX.toByteArray("D548435F7981B2B4"));
     scpChannel.setRicv(HEX.toByteArray("D548435F7981B2B4"));
     
     ResponseAPDU response = scpChannel.transmit(new CommandAPDU(HEX.toByteArray("84F28002024F00")));
@@ -114,15 +113,15 @@ public class Scp02ApduChannelTest extends AbstractJcTest {
     };
 
     CardChannelContext context = createContext(channel);
-    Scp02ParameterI i = Scp02ParameterI.of(context.getCardRecognitionData());
 
     byte[] sequenceCounter =  HEX.toByteArray("006D");
-    KeySet keySet = KeySet.of(context);
-    SessionKeys sessionKeys = keySet.deriveSessionKeys(sequenceCounter);
+    KeySet keySet = KeySet.of(ScpVersion.SCP_02, context.keyProvider());
+    SessionKeys sessionKeys = keySet.deriveSessionKeys(context.getCardProperties(), sequenceCounter);
+    context.setSessionKeys(sessionKeys);
 
-    Scp02ApduChannel scpChannel = new Scp02ApduChannel(channel, context.getMaxLength(), i
+    Scp02ApduChannel scpChannel = new Scp02ApduChannel(context
         , EnumSet.of(SecurityLevel.C_MAC, SecurityLevel.C_DECRYPTION, SecurityLevel.R_MAC)
-        , sessionKeys, HEX.toByteArray("94373CCB68A4C173"));
+        , HEX.toByteArray("94373CCB68A4C173"));
     scpChannel.setRicv(HEX.toByteArray("94373CCB68A4C173"));
 
     ResponseAPDU response = scpChannel.transmit(new CommandAPDU(HEX.toByteArray("80F240000B4F09F00000008800010101")));
