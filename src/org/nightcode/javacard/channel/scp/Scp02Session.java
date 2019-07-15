@@ -78,6 +78,13 @@ public class Scp02Session implements SecureChannelSession {
 
   @Override public void openSecureChannel(EnumSet<SecurityLevel> securityLevel)
       throws IOException, JavaCardException {
+    if (securityLevel.contains(SecurityLevel.C_DECRYPTION) && !securityLevel.contains(SecurityLevel.C_MAC)) {
+      throw new IllegalArgumentException("C_DECRYPTION must be combined with C_MAC");
+    }
+    if (securityLevel.contains(SecurityLevel.R_DECRYPTION) && !securityLevel.contains(SecurityLevel.R_MAC)) {
+      throw new IllegalArgumentException("R_DECRYPTION must be combined with R_MAC");
+    }
+
     byte hostKeyVersionNumber = context.getCardProperties().getKeyVersionNumber();
 
     Scp02Context scp02Context = initializeUpdate(hostKeyVersionNumber);
@@ -176,9 +183,6 @@ public class Scp02Session implements SecureChannelSession {
     int p1 = 0;
     for (SecurityLevel level : securityLevel) {
       p1 |= level.bitMask();
-    }
-    if (securityLevel.contains(SecurityLevel.C_DECRYPTION)) {
-      p1 |= SecurityLevel.C_MAC.bitMask();
     }
 
     Scp02ApduChannel initialSecuredChannel = new Scp02ApduChannel(context, EnumSet.of(SecurityLevel.C_MAC));

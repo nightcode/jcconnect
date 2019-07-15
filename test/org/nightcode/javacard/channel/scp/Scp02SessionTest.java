@@ -98,4 +98,24 @@ public class Scp02SessionTest extends AbstractJcTest {
     Scp02Session session = new Scp02Session(context);
     session.externalAuthenticate(scp02Context, EnumSet.of(SecurityLevel.C_MAC, SecurityLevel.C_DECRYPTION));
   }
+
+  @Test public void testOpenSecureChannel() {
+    ApduChannel channel = request -> new ResponseAPDU(Hexs.hex().toByteArray("9000"));
+
+    CardChannelContext context = createContext(channel);
+    Scp02Session session = new Scp02Session(context);
+    try {
+      session.openSecureChannel(EnumSet.of(SecurityLevel.C_DECRYPTION));
+      Assert.fail("must throw IllegalArgumentException");
+    } catch (Exception ex) {
+      Assert.assertEquals("C_DECRYPTION must be combined with C_MAC", ex.getMessage());
+    }
+
+    try {
+      session.openSecureChannel(EnumSet.of(SecurityLevel.R_DECRYPTION));
+      Assert.fail("must throw IllegalArgumentException");
+    } catch (Exception ex) {
+      Assert.assertEquals("R_DECRYPTION must be combined with R_MAC", ex.getMessage());
+    }
+  }
 }
