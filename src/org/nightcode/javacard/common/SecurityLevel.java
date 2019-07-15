@@ -20,7 +20,7 @@ public enum SecurityLevel {
   C_MAC(0x01),
   C_DECRYPTION(0x02),
   R_MAC(0x10),
-  R_DECRYPTION(0x20)
+  R_ENCRYPTION(0x20)
   ;
 
   private final int bitMask;

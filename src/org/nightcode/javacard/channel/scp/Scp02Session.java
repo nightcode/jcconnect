@@ -81,9 +81,6 @@ public class Scp02Session implements SecureChannelSession {
     if (securityLevel.contains(SecurityLevel.C_DECRYPTION) && !securityLevel.contains(SecurityLevel.C_MAC)) {
       throw new IllegalArgumentException("C_DECRYPTION must be combined with C_MAC");
     }
-    if (securityLevel.contains(SecurityLevel.R_DECRYPTION) && !securityLevel.contains(SecurityLevel.R_MAC)) {
-      throw new IllegalArgumentException("R_DECRYPTION must be combined with R_MAC");
-    }
 
     byte hostKeyVersionNumber = context.getCardProperties().getKeyVersionNumber();
 

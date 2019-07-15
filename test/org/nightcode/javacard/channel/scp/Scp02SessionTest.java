@@ -110,12 +110,5 @@ public class Scp02SessionTest extends AbstractJcTest {
     } catch (Exception ex) {
       Assert.assertEquals("C_DECRYPTION must be combined with C_MAC", ex.getMessage());
     }
-
-    try {
-      session.openSecureChannel(EnumSet.of(SecurityLevel.R_DECRYPTION));
-      Assert.fail("must throw IllegalArgumentException");
-    } catch (Exception ex) {
-      Assert.assertEquals("R_DECRYPTION must be combined with R_MAC", ex.getMessage());
-    }
   }
 }
