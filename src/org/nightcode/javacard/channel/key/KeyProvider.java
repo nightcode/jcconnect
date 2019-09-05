@@ -21,6 +21,7 @@ import java.security.GeneralSecurityException;
 import java.security.Key;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.SecretKeySpec;
 
 public interface KeyProvider {
@@ -29,7 +30,17 @@ public interface KeyProvider {
 
     private static final byte[] DEFAULT_KEY_BYTES = Hexs.hex().toByteArray("404142434445464748494A4B4C4D4E4F");
 
-    private static final Key BASE_KEY = new SecretKeySpec(JcCryptoUtils.toKey24(DEFAULT_KEY_BYTES), "DESede");
+    private static final SecretKeyFactory KEY_FACTORY;
+    private static final Key BASE_KEY;
+
+    static {
+      try {
+        KEY_FACTORY = SecretKeyFactory.getInstance("DESede");
+        BASE_KEY = KEY_FACTORY.generateSecret(new SecretKeySpec(JcCryptoUtils.toKey24(DEFAULT_KEY_BYTES), "DESede"));
+      } catch (GeneralSecurityException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
 
     private DefaultKeyProvider() {
       // do nothing
@@ -50,7 +61,7 @@ public interface KeyProvider {
         Cipher cipher = Cipher.getInstance(JcCryptoUtils.DES_EDE_CBC_NO_PADDING);
         cipher.init(Cipher.ENCRYPT_MODE, BASE_KEY, JcCryptoUtils.ZERO_IV_PARAMETER_SPEC);
         byte[] result = cipher.doFinal(derivationData);
-        return new SecretKeySpec(JcCryptoUtils.toKey24(result), "DESede");
+        return KEY_FACTORY.generateSecret(new SecretKeySpec(JcCryptoUtils.toKey24(result), "DESede"));
       } catch (GeneralSecurityException ex) {
         throw new RuntimeException("session keys calculation failed", ex);
       }
