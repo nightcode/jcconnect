@@ -39,9 +39,9 @@ public class Scp02KeySetTest extends AbstractJcTest {
     private static final Key MAC_BASE_KEY = new SecretKeySpec(JcCryptoUtils.toKey24(MAC_KEY_BYTES), "DESede");
     private static final Key DEK_BASE_KEY = new SecretKeySpec(JcCryptoUtils.toKey24(DEK_KEY_BYTES), "DESede");
 
-    @Override public Key deriveSessionKey(KeyContext context, byte keyIdentifier, KeyUsage usage) {
+    @Override public Key deriveSessionKey(KeyContext context, KeyUsage usage) {
       if (DerivationType.SCP_02.equals(context.derivationType())) {
-        Key baseKey = getKey(keyIdentifier, context.cardProperties().getKeyVersionNumber());
+        Key baseKey = getKey(getKeyIdentifier(context, usage), context.cardProperties().getKeyVersionNumber());
         return deriveScp02SessionKey(baseKey, usage.keyConstant(), context.sequenceCounter());
       }
       throw new IllegalArgumentException("unsupported derivation type " + context.derivationType());

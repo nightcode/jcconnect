@@ -46,7 +46,7 @@ public interface KeyProvider {
       // do nothing
     }
 
-    @Override public Key deriveSessionKey(KeyContext context, byte keyIdentifier, KeyUsage usage) {
+    @Override public Key deriveSessionKey(KeyContext context, KeyUsage usage) {
       if (DerivationType.SCP_02.equals(context.derivationType())) {
         return deriveScp02SessionKey(usage.keyConstant(), context.sequenceCounter());
       }
@@ -70,5 +70,5 @@ public interface KeyProvider {
 
   KeyProvider DEFAULT = new DefaultKeyProvider();
 
-  Key deriveSessionKey(KeyContext context, byte keyIdentifier, KeyUsage usage);
+  Key deriveSessionKey(KeyContext context, KeyUsage usage);
 }

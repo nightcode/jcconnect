@@ -37,12 +37,10 @@ public class Scp02KeySet extends KeySet {
 
     Map<KeyUsage, Key> keys = new HashMap<>();
 
-    CardProperties properties = context.cardProperties();
-
-    keys.put(KeyUsage.ENC, keyProvider.deriveSessionKey(context, properties.getEncKeyIdentifier(), KeyUsage.ENC));
-    keys.put(KeyUsage.MAC, keyProvider.deriveSessionKey(context, properties.getMacKeyIdentifier(), KeyUsage.MAC));
-    keys.put(KeyUsage.DEK, keyProvider.deriveSessionKey(context, properties.getDekKeyIdentifier(), KeyUsage.DEK));
-    keys.put(KeyUsage.R_MAC, keyProvider.deriveSessionKey(context, properties.getMacKeyIdentifier(), KeyUsage.R_MAC));
+    keys.put(KeyUsage.ENC, keyProvider.deriveSessionKey(context, KeyUsage.ENC));
+    keys.put(KeyUsage.MAC, keyProvider.deriveSessionKey(context, KeyUsage.MAC));
+    keys.put(KeyUsage.DEK, keyProvider.deriveSessionKey(context, KeyUsage.DEK));
+    keys.put(KeyUsage.R_MAC, keyProvider.deriveSessionKey(context, KeyUsage.R_MAC));
 
     return new SessionKeysImpl(keys);
   }

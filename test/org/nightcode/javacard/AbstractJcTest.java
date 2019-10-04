@@ -19,7 +19,9 @@ import org.nightcode.common.util.props.Properties;
 import org.nightcode.common.util.props.PropertiesMapStorage;
 import org.nightcode.javacard.channel.ApduChannel;
 import org.nightcode.javacard.channel.CardChannelContext;
+import org.nightcode.javacard.channel.key.KeyContext;
 import org.nightcode.javacard.channel.key.KeyProvider;
+import org.nightcode.javacard.channel.key.KeyUsage;
 import org.nightcode.javacard.channel.scp.ScpVersion;
 import org.nightcode.javacard.common.CardProperties;
 
@@ -47,5 +49,20 @@ public abstract class AbstractJcTest {
     context.setScpVersion(ScpVersion.SCP_02);
 
     return context;
+  }
+
+  public static byte getKeyIdentifier(KeyContext context, KeyUsage usage) {
+    switch (usage) {
+      case ENC:
+        return context.cardProperties().getEncKeyIdentifier();
+      case MAC:
+        return context.cardProperties().getMacKeyIdentifier();
+      case DEK:
+        return context.cardProperties().getDekKeyIdentifier();
+      case R_MAC:
+        return context.cardProperties().getMacKeyIdentifier();
+      default:
+        throw new IllegalArgumentException("unsupported key usage '" + usage + "'");
+    }
   }
 }
