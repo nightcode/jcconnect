@@ -18,7 +18,7 @@
   <groupId>org.nightcode</groupId>
   <artifactId>jc-connect</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.5-SNAPSHOT</version>
+  <version>0.1.5</version>
 
   <name>JavaCard Connect</name>
   <description>JavaCard Connect is a framework which provides an implementation of a secure communication protocol(s) in conformance with the Global Platform Card Specification.</description>
