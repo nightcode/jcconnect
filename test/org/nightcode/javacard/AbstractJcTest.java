@@ -35,9 +35,6 @@ public abstract class AbstractJcTest {
   protected static CardChannelContext createContext(ApduChannel channel) {
     Map<String, Object> properties = new HashMap<>();
     properties.put("key_version_number", (byte) 0xFF);
-    properties.put("enc_key_identifier", (byte) 0x01);
-    properties.put("mac_key_identifier", (byte) 0x02);
-    properties.put("dek_key_identifier", (byte) 0x03);
     CardProperties cardProperties = new CardProperties(Properties.of(new PropertiesMapStorage(properties))) ;
 
     CardChannelContext context = CardChannelContext.builder()
@@ -54,13 +51,12 @@ public abstract class AbstractJcTest {
   public static byte getKeyIdentifier(KeyContext context, KeyUsage usage) {
     switch (usage) {
       case ENC:
-        return context.cardProperties().getEncKeyIdentifier();
+        return 0x01;
       case MAC:
-        return context.cardProperties().getMacKeyIdentifier();
-      case DEK:
-        return context.cardProperties().getDekKeyIdentifier();
       case R_MAC:
-        return context.cardProperties().getMacKeyIdentifier();
+        return 0x02;
+      case DEK:
+        return 0x03;
       default:
         throw new IllegalArgumentException("unsupported key usage '" + usage + "'");
     }

@@ -17,6 +17,8 @@ package org.nightcode.javacard.common;
 import org.nightcode.common.util.props.Properties;
 import org.nightcode.javacard.channel.scp.ScpVersion;
 
+import javax.annotation.Nullable;
+
 public class CardProperties {
 
   private final Properties properties;
@@ -25,24 +27,16 @@ public class CardProperties {
     this.properties = properties;
   }
 
-  public Aid getAid() {
-    return Aid.parse(properties.getStringValue("aid"));
-  }
-
-  public byte getDekKeyIdentifier() {
-    return properties.getByteValue("dek_key_identifier");
-  }
-
-  public byte getEncKeyIdentifier() {
-    return properties.getByteValue("enc_key_identifier");
+  public @Nullable Aid getAid() {
+    String aid = properties.getStringValue("aid");
+    if (aid == null) {
+      return null;
+    }
+    return Aid.parse(aid);
   }
 
   public byte getKeyVersionNumber() {
     return properties.getByteValue("key_version_number");
-  }
-
-  public byte getMacKeyIdentifier() {
-    return properties.getByteValue("mac_key_identifier");
   }
 
   public ScpVersion getScpVersion() {

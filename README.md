@@ -20,10 +20,7 @@ It allows to establish a secure channel between an off-card entity and a card.
 
   Map<String, Object> properties = new HashMap<>();
   properties.put("aid", "A000000151000000");
-  properties.put("key_version_number", (byte) 0x00);
-  properties.put("enc_key_identifier", (byte) 0x01);
-  properties.put("mac_key_identifier", (byte) 0x02);
-  properties.put("dek_key_identifier", (byte) 0x03);
+  properties.put("key_version_number", (byte) 0xFF);
   PropertiesStorage propertiesStorage = new PropertiesMapStorage(properties);
 
   CardProperties cardProperties = new CardProperties(Properties.of(propertiesStorage));
