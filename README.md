@@ -18,12 +18,12 @@ It allows to establish a secure channel between an off-card entity and a card.
 
   CardChannelService service = new CardChannelServiceImpl(KeyProvider.DEFAULT); 
 
-  Map<String, Object> properties = new HashMap<>();
-  properties.put("aid", "A000000151000000");
-  properties.put("key_version_number", (byte) 0xFF);
-  PropertiesStorage propertiesStorage = new PropertiesMapStorage(properties);
 
-  CardProperties cardProperties = new CardProperties(Properties.of(propertiesStorage));
+  CardProperties cardProperties = CardProperties.builder()
+      .aid(Aid.parse("A000000151000000"))
+      .keyVersionNumber((byte) 0xFF)
+      .scpVersion(ScpVersion.SCP_02)
+      .build();
 
   CardChannelContext context = service.createCardChannelContext(cardProperties, new PlainApduChannel(card.getBasicChannel()));
   SecureChannelSession channelSession = service.createSecureChannelSession(context);
@@ -43,7 +43,7 @@ Download [the latest jar][1] via Maven:
 <dependency>
   <groupId>org.nightcode</groupId>
   <artifactId>jc-connect</artifactId>
-  <version>0.1.6</version>
+  <version>0.1.7</version>
 </dependency>
 ```
 
