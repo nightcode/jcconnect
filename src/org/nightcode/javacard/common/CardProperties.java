@@ -23,7 +23,7 @@ public final class CardProperties {
   public static final class Builder {
     private Aid aid;
     private byte keyVersionNumber;
-    private ScpVersion scpVersion;
+    private ScpVersion scpVersion = ScpVersion.SCP_02;
 
     private Builder() {
       // do nothing
