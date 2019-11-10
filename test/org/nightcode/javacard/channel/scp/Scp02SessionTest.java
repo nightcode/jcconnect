@@ -14,7 +14,6 @@
 
 package org.nightcode.javacard.channel.scp;
 
-import org.nightcode.common.base.Hexs;
 import org.nightcode.javacard.AbstractJcTest;
 import org.nightcode.javacard.JavaCardException;
 import org.nightcode.javacard.channel.ApduChannel;
@@ -23,6 +22,7 @@ import org.nightcode.javacard.channel.key.KeySet;
 import org.nightcode.javacard.channel.key.SessionKeys;
 import org.nightcode.javacard.common.SecurityLevel;
 import org.nightcode.javacard.util.ByteArrayGenerator;
+import org.nightcode.javacard.util.Hexs;
 
 import java.io.IOException;
 import java.util.EnumSet;

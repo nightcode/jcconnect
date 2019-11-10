@@ -14,9 +14,6 @@
 
 package org.nightcode.javacard;
 
-import org.nightcode.common.base.Hexs;
-import org.nightcode.common.util.props.Properties;
-import org.nightcode.common.util.props.PropertiesMapStorage;
 import org.nightcode.javacard.channel.ApduChannel;
 import org.nightcode.javacard.channel.CardChannelContext;
 import org.nightcode.javacard.channel.key.KeyContext;
@@ -24,18 +21,14 @@ import org.nightcode.javacard.channel.key.KeyProvider;
 import org.nightcode.javacard.channel.key.KeyUsage;
 import org.nightcode.javacard.channel.scp.ScpVersion;
 import org.nightcode.javacard.common.CardProperties;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.nightcode.javacard.util.Hexs;
 
 public abstract class AbstractJcTest {
 
   protected static final Hexs HEX = Hexs.hex();
  
   protected static CardChannelContext createContext(ApduChannel channel) {
-    Map<String, Object> properties = new HashMap<>();
-    properties.put("key_version_number", (byte) 0xFF);
-    CardProperties cardProperties = new CardProperties(Properties.of(new PropertiesMapStorage(properties))) ;
+    CardProperties cardProperties = CardProperties.builder().keyVersionNumber((byte) 0xFF).build();
 
     CardChannelContext context = CardChannelContext.builder()
         .channel(channel)

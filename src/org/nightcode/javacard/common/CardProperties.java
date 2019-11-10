@@ -14,32 +14,64 @@
 
 package org.nightcode.javacard.common;
 
-import org.nightcode.common.util.props.Properties;
 import org.nightcode.javacard.channel.scp.ScpVersion;
 
 import javax.annotation.Nullable;
 
-public class CardProperties {
+public final class CardProperties {
 
-  private final Properties properties;
+  public static final class Builder {
+    private Aid aid;
+    private byte keyVersionNumber;
+    private ScpVersion scpVersion;
 
-  public CardProperties(Properties properties) {
-    this.properties = properties;
-  }
-
-  public @Nullable Aid getAid() {
-    String aid = properties.getStringValue("aid");
-    if (aid == null) {
-      return null;
+    private Builder() {
+      // do nothing
     }
-    return Aid.parse(aid);
+
+    public Builder aid(Aid val) {
+      aid = val;
+      return this;
+    }
+
+    public CardProperties build() {
+      return new CardProperties(this);
+    }
+
+    public Builder keyVersionNumber(byte val) {
+      keyVersionNumber = val;
+      return this;
+    }
+
+    public Builder scpVersion(ScpVersion val) {
+      scpVersion = val;
+      return this;
+    }
   }
 
-  public byte getKeyVersionNumber() {
-    return properties.getByteValue("key_version_number");
+  public static Builder builder() {
+    return new Builder();
   }
 
-  public ScpVersion getScpVersion() {
-    return ScpVersion.of(properties.getIntValue("scp_version", 2));
+  private final Aid aid;
+  private final byte keyVersionNumber;
+  private final ScpVersion scpVersion;
+
+  private CardProperties(Builder builder) {
+    aid = builder.aid;
+    keyVersionNumber = builder.keyVersionNumber;
+    scpVersion = builder.scpVersion;
+  }
+
+  public @Nullable Aid aid() {
+    return aid;
+  }
+
+  public byte keyVersionNumber() {
+    return keyVersionNumber;
+  }
+
+  public ScpVersion scpVersion() {
+    return scpVersion;
   }
 }

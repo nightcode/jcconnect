@@ -14,7 +14,7 @@
 
 package org.nightcode.javacard.common;
 
-import org.nightcode.common.base.Hexs;
+import org.nightcode.javacard.util.Hexs;
 
 import java.util.Arrays;
 

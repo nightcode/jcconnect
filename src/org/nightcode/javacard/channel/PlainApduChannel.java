@@ -14,11 +14,11 @@
 
 package org.nightcode.javacard.channel;
 
-import org.nightcode.common.base.Hexs;
-import org.nightcode.common.util.logging.LogManager;
-import org.nightcode.common.util.logging.Logger;
+import org.nightcode.javacard.util.Hexs;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
@@ -27,7 +27,7 @@ import javax.smartcardio.ResponseAPDU;
 
 public class PlainApduChannel implements ApduChannel {
 
-  private static final Logger LOGGER = LogManager.getLogger(PlainApduChannel.class);
+  private static final Logger LOGGER = Logger.getLogger(PlainApduChannel.class.getName());
 
   private static final Hexs HEX = Hexs.hex();
 
@@ -38,15 +38,15 @@ public class PlainApduChannel implements ApduChannel {
   }
 
   @Override public ResponseAPDU transmit(CommandAPDU request) throws IOException {
-    LOGGER.debug("  >>>> %s %s",  HEX.fromByteArray(request.getBytes(), 0, 4)
-        , HEX.fromByteArray(request.getBytes(), 4, request.getBytes().length - 4));
+    LOGGER.log(Level.FINER, String.format("  >>>> %s %s",  HEX.fromByteArray(request.getBytes(), 0, 4)
+        , HEX.fromByteArray(request.getBytes(), 4, request.getBytes().length - 4)));
     ResponseAPDU response;
     try {
       response = channel.transmit(request);
     } catch (CardException ex) {
       throw new IOException(ex);
     }
-    LOGGER.debug("  <<<< %s %04X", HEX.fromByteArray(response.getData()), response.getSW());
+    LOGGER.log(Level.FINER, String.format("  <<<< %s %04X", HEX.fromByteArray(response.getData()), response.getSW()));
     return response;
   }
 }

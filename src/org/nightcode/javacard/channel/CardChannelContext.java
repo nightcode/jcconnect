@@ -102,7 +102,7 @@ public final class CardChannelContext {
       scpVersion = JcUtils.getScpVersion(cardRecognitionData);
     } else {
       // fallback
-      scpVersion = cardProperties.getScpVersion();
+      scpVersion = cardProperties.scpVersion();
     }
   }
 

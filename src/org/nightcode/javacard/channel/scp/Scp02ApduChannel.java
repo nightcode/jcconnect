@@ -14,13 +14,13 @@
 
 package org.nightcode.javacard.channel.scp;
 
-import org.nightcode.common.base.Hexs;
 import org.nightcode.javacard.JavaCardException;
 import org.nightcode.javacard.channel.ApduChannel;
 import org.nightcode.javacard.channel.CardChannelContext;
 import org.nightcode.javacard.channel.key.KeyUsage;
 import org.nightcode.javacard.channel.key.SessionKeys;
 import org.nightcode.javacard.common.SecurityLevel;
+import org.nightcode.javacard.util.Hexs;
 import org.nightcode.javacard.util.Iso7816D4;
 import org.nightcode.javacard.util.JcCryptoUtils;
 

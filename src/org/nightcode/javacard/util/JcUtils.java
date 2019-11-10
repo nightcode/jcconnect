@@ -14,9 +14,6 @@
 
 package org.nightcode.javacard.util;
 
-import org.nightcode.common.base.Hexs;
-import org.nightcode.common.util.logging.LogManager;
-import org.nightcode.common.util.logging.Logger;
 import org.nightcode.javacard.channel.scp.ScpVersion;
 import org.nightcode.tools.ber.BerFrame;
 import org.nightcode.tools.ber.StreamBerPrinter;
@@ -25,6 +22,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +32,7 @@ import org.bouncycastle.asn1.ASN1Primitive;
 
 public final class JcUtils {
 
-  private static final Logger LOGGER = LogManager.getLogger(JcUtils.class);
+  private static final Logger LOGGER = Logger.getLogger(JcUtils.class.getName());
 
   private static final int OID_TAG   = 0x06;
   private static final int APP_TAG_0 = 0x60;
@@ -50,9 +49,9 @@ public final class JcUtils {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     try {
       new StreamBerPrinter(out).print(berFrame);
-      logger.debug(new String(out.toByteArray(), StandardCharsets.UTF_8));
+      logger.log(Level.FINE, new String(out.toByteArray(), StandardCharsets.UTF_8));
     } catch (IOException ex) {
-      LOGGER.trace("can't print BER frame", ex);
+      LOGGER.log(Level.FINEST, "can't print BER frame", ex);
     }
   }
 

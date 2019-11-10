@@ -14,9 +14,9 @@
 
 package org.nightcode.javacard.channel.key;
 
-import org.nightcode.common.base.Hexs;
 import org.nightcode.javacard.AbstractJcTest;
 import org.nightcode.javacard.channel.CardChannelContext;
+import org.nightcode.javacard.util.Hexs;
 import org.nightcode.javacard.util.JcCryptoUtils;
 
 import java.security.GeneralSecurityException;
@@ -41,7 +41,7 @@ public class Scp02KeySetTest extends AbstractJcTest {
 
     @Override public Key deriveSessionKey(KeyContext context, KeyUsage usage) {
       if (DerivationType.SCP_02.equals(context.derivationType())) {
-        Key baseKey = getKey(getKeyIdentifier(context, usage), context.cardProperties().getKeyVersionNumber());
+        Key baseKey = getKey(getKeyIdentifier(context, usage), context.cardProperties().keyVersionNumber());
         return deriveScp02SessionKey(baseKey, usage.keyConstant(), context.sequenceCounter());
       }
       throw new IllegalArgumentException("unsupported derivation type " + context.derivationType());

@@ -14,9 +14,6 @@
 
 package org.nightcode.javacard.channel.scp;
 
-import org.nightcode.common.base.Hexs;
-import org.nightcode.common.util.logging.LogManager;
-import org.nightcode.common.util.logging.Logger;
 import org.nightcode.javacard.JavaCardException;
 import org.nightcode.javacard.channel.CardChannelContext;
 import org.nightcode.javacard.channel.SecureChannelSession;
@@ -27,6 +24,7 @@ import org.nightcode.javacard.common.Apdu;
 import org.nightcode.javacard.common.SecurityLevel;
 import org.nightcode.javacard.util.ApduPreconditions;
 import org.nightcode.javacard.util.ByteArrayGenerator;
+import org.nightcode.javacard.util.Hexs;
 import org.nightcode.javacard.util.Iso7816D4;
 import org.nightcode.javacard.util.JcCryptoUtils;
 import org.nightcode.javacard.util.JcUtils;
@@ -37,6 +35,8 @@ import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.smartcardio.CommandAPDU;
@@ -44,7 +44,7 @@ import javax.smartcardio.ResponseAPDU;
 
 public class Scp02Session implements SecureChannelSession {
 
-  private static final Logger LOGGER = LogManager.getLogger(Scp02Session.class);
+  private static final Logger LOGGER = Logger.getLogger(Scp02Session.class.getName());
 
   private static final Hexs HEX = Hexs.hex();
 
@@ -82,7 +82,7 @@ public class Scp02Session implements SecureChannelSession {
       throw new IllegalArgumentException("C_DECRYPTION must be combined with C_MAC");
     }
 
-    byte hostKeyVersionNumber = context.getCardProperties().getKeyVersionNumber();
+    byte hostKeyVersionNumber = context.getCardProperties().keyVersionNumber();
 
     Scp02Context scp02Context = initializeUpdate(hostKeyVersionNumber);
     byte[] icv = externalAuthenticate(scp02Context, securityLevel);
@@ -133,7 +133,8 @@ public class Scp02Session implements SecureChannelSession {
     offset += cardChallenge.length;
     byte[] cardCryptogram = Arrays.copyOfRange(data, offset, offset + 8);
 
-    LOGGER.debug("  Key diversification data: %s"
+    LOGGER.log(Level.FINER, String.format(
+              "  Key diversification data: %s"
             + "\n  Key information:          keyVersionNumber=%s; SCP_0%s"
             + "\n  Sequence counter:         %s"
             + "\n  Card challenge:           %s"
@@ -143,7 +144,7 @@ public class Scp02Session implements SecureChannelSession {
         , HEX.fromByteArray(sequenceCounter)
         , HEX.fromByteArray(cardChallenge)
         , HEX.fromByteArray(cardCryptogram)
-    );
+    ));
 
     if (ScpVersion.SCP_02.version() != scpVersion) {
       throw new JavaCardException("SCP version mismatch: SCP_02 != SCP_0%s", scpVersion);
@@ -170,7 +171,7 @@ public class Scp02Session implements SecureChannelSession {
           , HEX.fromByteArray(cardCryptogram), HEX.fromByteArray(calculatedCardCryptogram)
       );
     }
-    LOGGER.info("verified Card Cryptogram: %s", HEX.fromByteArray(cardCryptogram));
+    LOGGER.log(Level.INFO, "verified Card Cryptogram: " + HEX.fromByteArray(cardCryptogram));
 
     return new Scp02Context(hostChallenge, cardChallenge, sequenceCounter);
   }

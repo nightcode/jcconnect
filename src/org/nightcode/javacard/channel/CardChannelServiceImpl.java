@@ -14,8 +14,6 @@
 
 package org.nightcode.javacard.channel;
 
-import org.nightcode.common.util.logging.LogManager;
-import org.nightcode.common.util.logging.Logger;
 import org.nightcode.javacard.JavaCardException;
 import org.nightcode.javacard.channel.key.KeyProvider;
 import org.nightcode.javacard.channel.scp.Scp02Session;
@@ -24,10 +22,10 @@ import org.nightcode.javacard.common.Aid;
 import org.nightcode.javacard.common.CardProperties;
 import org.nightcode.javacard.util.ApduPreconditions;
 import org.nightcode.javacard.util.JcUtils;
-import org.nightcode.tools.ber.BerDecoder;
 import org.nightcode.tools.ber.BerFrame;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
@@ -43,7 +41,7 @@ import static org.nightcode.javacard.common.Apdu.SW_SELECT_CARD_LOCKED;
 
 public class CardChannelServiceImpl implements CardChannelService {
 
-  private static final Logger LOGGER = LogManager.getLogger(CardChannelServiceImpl.class);
+  private static final Logger LOGGER = Logger.getLogger(CardChannelServiceImpl.class.getName());
 
   private static final int DEF_MAX_RESPONSE_LENGTH = 256;
 
@@ -117,7 +115,7 @@ public class CardChannelServiceImpl implements CardChannelService {
   }
 
   private void parseSelectResponse(CardChannelContext.Builder builder, byte[] data) {
-    BerFrame berFrame = new BerDecoder().decode(data);
+    BerFrame berFrame = BerFrame.parseFrom(data);
     JcUtils.logBerFrame(berFrame, LOGGER);
 
     BerFrame fciTemplate = berFrame.getTag(TAG_6F_FCI_TEMPLATE);

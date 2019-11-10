@@ -14,7 +14,7 @@
 
 package org.nightcode.javacard.channel.key;
 
-import org.nightcode.common.base.Hexs;
+import org.nightcode.javacard.util.Hexs;
 import org.nightcode.javacard.util.JcCryptoUtils;
 
 import java.security.GeneralSecurityException;
