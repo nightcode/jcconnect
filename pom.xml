@@ -36,7 +36,7 @@
 
     <bouncycastle.version>1.60</bouncycastle.version>
 
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <easymock.version>3.6</easymock.version>
   </properties>
 
