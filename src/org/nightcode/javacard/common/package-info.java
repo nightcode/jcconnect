@@ -12,4 +12,6 @@
  * limitations under the License.
  */
 
+/**
+ */
 package org.nightcode.javacard.common;
