@@ -1,6 +1,6 @@
 # JavaCard Connect 
 
-[![Build Status](https://travis-ci.org/nightcode/jcconnect.svg?branch=master)](https://travis-ci.org/nightcode/jcconnect)
+[![Build Status](https://github.com/nightcode/jcconnect/actions/workflows/maven.yml/badge.svg)](https://github.com/nightcode/jcconnect/actions/workflows/maven.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/org.nightcode/jc-connect.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.nightcode%20AND%20a%3Ajc-connect)
 
 JavaCard Connect is a framework which provides an implementation of a secure communication protocol in conformance with the Global Platform Card Specification.
