@@ -18,7 +18,7 @@
   <groupId>org.nightcode</groupId>
   <artifactId>jc-connect</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.9</version>
+  <version>0.1.10-SNAPSHOT</version>
 
   <name>JavaCard Connect</name>
   <description>JavaCard Connect is a framework which provides an implementation of a secure communication protocol(s) in conformance with the Global Platform Card Specification.</description>
@@ -34,11 +34,7 @@
 
     <bertool.version>0.5</bertool.version>
 
-<<<<<<< HEAD
-    <bouncycastle.version>1.67</bouncycastle.version>
-=======
     <bouncycastle.version>1.73</bouncycastle.version>
->>>>>>> 558bfb5 (Bump bouncycastle version from 1.60 to 1.73, junit version from 4.12 to 4.13.1. Code style related changes.)
 
     <junit.version>4.13.1</junit.version>
     <easymock.version>3.6</easymock.version>
