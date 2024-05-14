@@ -34,7 +34,7 @@
 
     <bertool.version>0.5</bertool.version>
 
-    <bouncycastle.version>1.74</bouncycastle.version>
+    <bouncycastle.version>1.78</bouncycastle.version>
 
     <junit.version>4.13.1</junit.version>
     <easymock.version>3.6</easymock.version>
